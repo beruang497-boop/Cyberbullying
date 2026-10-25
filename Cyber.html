@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="id" class="dark scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberGuardian - Lindungi Ruang Siber Bersama</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        cyber: {
+                            50: '#f0fdf4',
+                            500: '#10b981',
+                            600: '#059669',
+                            950: '#022c22',
+                        },
+                        neon: {
+                            cyan: '#06b6d4',
+                            purple: '#a855f7',
+                            pink: '#ec4899',
+                            blue: '#3b82f6'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .glow-cyan { box-shadow: 0 0 25px rgba(6, 182, 212, 0.3); }
+        .glow-purple { box-shadow: 0 0 25px rgba(168, 85, 247, 0.3); }
+        .glow-pink { box-shadow: 0 0 25px rgba(236, 72, 153, 0.3); }
+        .text-glow { text-shadow: 0 0 10px rgba(6, 182, 212, 0.5); }
+        .bg-grid-pattern {
+            background-image: radial-gradient(rgba(6, 182, 212, 0.15) 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        .animate-float { animation: float 4s ease-in-out infinite; }
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.8; }
+        }
+        .animate-pulse-glow { animation: pulseGlow 3s ease-in-out infinite; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #030712; }
+        ::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #374151; }
+    </style>
+</head>
+<body class="bg-gray-950 text-gray-100 min-h-screen selection:bg-cyan-500 selection:text-black bg-grid-pattern">
+
+    <!-- Notification Modal Box -->
+    <div id="custom-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm hidden">
+        <div class="bg-gray-900 border border-cyan-500/50 rounded-2xl p-6 max-w-md w-full mx-4 shadow-2xl glow-cyan transform transition-all scale-95 opacity-0" id="modal-content">
+            <div class="flex items-center space-x-3 mb-4">
+                <div id="modal-icon" class="p-3 bg-cyan-500/10 text-cyan-400 rounded-xl">
+                    <i data-lucide="info" class="w-6 h-6"></i>
+                </div>
+                <h3 id="modal-title" class="text-xl font-bold text-white">Notifikasi CyberGuardian</h3>
+            </div>
+            <p id="modal-message" class="text-gray-300 text-sm leading-relaxed mb-6">Pesan informasi sistem.</p>
+            <div class="flex justify-end space-x-3">
+                <button onclick="closeModal()" class="px-5 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-black font-semibold rounded-xl text-sm transition shadow-lg shadow-cyan-500/20">Mengerti</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Header -->
+    <header class="sticky top-0 z-40 backdrop-blur-xl bg-gray-950/80 border-b border-gray-800/80">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <a href="#" class="flex items-center space-x-3 group">
+                <div class="p-2.5 bg-gradient-to-br from-cyan-500 to-purple-600 rounded-xl group-hover:scale-105 transition shadow-lg shadow-cyan-500/20">
+                    <i data-lucide="shield-check" class="w-6 h-6 text-black"></i>
+                </div>
+                <div>
+                    <span class="text-xl font-black tracking-wider bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-500 bg-clip-text text-transparent">CYBER</span>
+                    <span class="text-xl font-bold text-white tracking-widest">GUARDIAN</span>
+                </div>
+            </a>
+            
+            <nav class="hidden lg:flex items-center space-x-1">
+                <a href="#beranda" class="px-4 py-2 rounded-xl text-sm font-medium text-gray-300 hover:text-cyan-400 hover:bg-gray-900 transition">Beranda</a>
+                <a href="#edukasi" class="px-4 py-2 rounded-xl text-sm font-medium text-gray-300 hover:text-cyan-400 hover:bg-gray-900 transition">Modul Edukasi</a>
+                <a href="#simulasi" class="px-4 py-2 rounded-xl text-sm font-medium text-gray-300 hover:text-cyan-400 hover:bg-gray-900 transition">Simulasi Empati</a>
+                <a href="#cerita" class="px-4 py-2 rounded-xl text-sm font-medium text-gray-300 hover:text-cyan-400 hover:bg-gray-900 transition">Ruang Aman</a>
+                <a href="#kuis" class="px-4 py-2 rounded-xl text-sm font-medium text-gray-300 hover:text-cyan-400 hover:bg-gray-900 transition">Kuis Ally</a>
+                <a href="#bantuan" class="px-4 py-2 rounded-xl text-sm font-medium text-gray-300 hover:text-cyan-400 hover:bg-gray-900 transition">Pusat Bantuan</a>
+            </nav>
+
+            <div class="flex items-center space-x-3">
+                <button onclick="toggleAudio()" id="audio-btn" class="p-2.5 bg-gray-900 border border-gray-800 hover:border-cyan-500/50 rounded-xl text-gray-300 hover:text-cyan-400 transition relative group" title="Toggle Ambient Sound">
+                    <i data-lucide="volume-x" class="w-5 h-5" id="audio-icon"></i>
+                    <span class="absolute -bottom-8 right-0 bg-gray-900 text-xs text-gray-300 px-2 py-1 rounded border border-gray-800 opacity-0 group-hover:opacity-100 transition whitespace-nowrap pointer-events-none">Suara Sekitar</span>
+                </button>
+                <a href="#bantuan" class="hidden sm:inline-flex items-center space-x-2 px-5 py-2.5 bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-400 hover:to-purple-500 text-white font-semibold rounded-xl text-sm shadow-lg shadow-pink-500/20 transition transform hover:-translate-y-0.5">
+                    <i data-lucide="life-buoy" class="w-4 h-4"></i>
+                    <span>Lapor Darurat</span>
+                </a>
+                <button onclick="toggleMobileMenu()" class="lg:hidden p-2.5 bg-gray-900 border border-gray-800 rounded-xl text-gray-300 hover:text-white">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="lg:hidden hidden border-t border-gray-800 bg-gray-950/95 px-4 pt-3 pb-5 space-y-2">
+            <a href="#beranda" onclick="toggleMobileMenu()" class="block px-4 py-2 rounded-lg text-sm text-gray-300 hover:bg-gray-900">Beranda</a>
+            <a href="#edukasi" onclick="toggleMobileMenu()" class="block px-4 py-2 rounded-lg text-sm text-gray-300 hover:bg-gray-900">Modul Edukasi</a>
+            <a href="#simulasi" onclick="toggleMobileMenu()" class="block px-4 py-2 rounded-lg text-sm text-gray-300 hover:bg-gray-900">Simulasi Empati</a>
+            <a href="#cerita" onclick="toggleMobileMenu()" class="block px-4 py-2 rounded-lg text-sm text-gray-300 hover:bg-gray-900">Ruang Aman</a>
+            <a href="#kuis" onclick="toggleMobileMenu()" class="block px-4 py-2 rounded-lg text-sm text-gray-300 hover:bg-gray-900">Kuis Ally</a>
+            <a href="#bantuan" onclick="toggleMobileMenu()" class="block px-4 py-2 rounded-lg text-sm text-gray-300 hover:bg-gray-900">Pusat Bantuan</a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="beranda" class="relative pt-20 pb-32 overflow-hidden">
+        <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-tr from-cyan-500/20 via-purple-500/20 to-pink-500/20 rounded-full blur-3xl pointer-events-none animate-pulse-glow"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+            <div class="inline-flex items-center space-x-2 px-4 py-2 bg-cyan-950/60 border border-cyan-500/30 rounded-full text-cyan-400 text-xs font-medium tracking-wide mb-8 animate-float">
+                <i data-lucide="sparkles" class="w-4 h-4"></i>
+                <span>Platform Kesadaran & Dukungan Anti-Cyberbullying Indonesia</span>
+            </div>
+            
+            <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight max-w-4xl mx-auto leading-tight mb-8">
+                Hentikan Kata-Kata Jahat, <br>
+                <span class="bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-500 bg-clip-text text-transparent text-glow">Bangun Dunia Digital Positif.</span>
+            </h1>
+            
+            <p class="text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto mb-12 leading-relaxed">
+                Teknologi mendekatkan yang jauh, namun kata-kata negatif bisa melukai sedalam fisik. Kenali dampaknya, jadilah penyelamat (bystander hero), dan temukan ruang aman Anda di sini.
+            </p>
+
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-20">
+                <a href="#simulasi" class="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-black font-bold rounded-2xl shadow-xl shadow-cyan-500/25 transition transform hover:-translate-y-1 flex items-center justify-center space-x-3">
+                    <i data-lucide="play-circle" class="w-5 h-5"></i>
+                    <span>Mulai Simulasi Empati</span>
+                </a>
+                <a href="#edukasi" class="w-full sm:w-auto px-8 py-4 bg-gray-900/90 border border-gray-800 hover:border-cyan-500/50 text-white font-semibold rounded-2xl transition flex items-center justify-center space-x-3">
+                    <i data-lucide="book-open" class="w-5 h-5 text-cyan-400"></i>
+                    <span>Pelajari Modul</span>
+                </a>
+            </div>
+
+            <!-- Impactful Stats Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+                <div class="bg-gray-900/60 backdrop-blur-xl border border-gray-800/80 p-8 rounded-3xl relative overflow-hidden group hover:border-cyan-500/40 transition">
+                    <div class="absolute -right-4 -bottom-4 w-24 h-24 bg-cyan-500/10 rounded-full blur-xl group-hover:bg-cyan-500/20 transition"></div>
+                    <div class="text-3xl sm:text-4xl font-black text-cyan-400 mb-2">41%</div>
+                    <p class="text-sm text-gray-400 leading-relaxed">Remaja di Indonesia pernah mengalami atau menjadi sasaran langsung cyberbullying di media sosial.</p>
+                </div>
+                <div class="bg-gray-900/60 backdrop-blur-xl border border-gray-800/80 p-8 rounded-3xl relative overflow-hidden group hover:border-purple-500/40 transition">
+                    <div class="absolute -right-4 -bottom-4 w-24 h-24 bg-purple-500/10 rounded-full blur-xl group-hover:bg-purple-500/20 transition"></div>
+                    <div class="text-3xl sm:text-4xl font-black text-purple-400 mb-2">2.5x</div>
+                    <p class="text-sm text-gray-400 leading-relaxed">Lebih rentan mengalami kecemasan berat & depresi bagi korban perundungan siber yang tidak melapor.</p>
+                </div>
+                <div class="bg-gray-900/60 backdrop-blur-xl border border-gray-800/80 p-8 rounded-3xl relative overflow-hidden group hover:border-pink-500/40 transition">
+                    <div class="absolute -right-4 -bottom-4 w-24 h-24 bg-pink-500/10 rounded-full blur-xl group-hover:bg-pink-500/20 transition"></div>
+                    <div class="text-3xl sm:text-4xl font-black text-pink-400 mb-2">87%</div>
+                    <p class="text-sm text-gray-400 leading-relaxed">Kasus bullying berhenti dalam 10 detik saat ada teman sebaya yang membela secara aktif (Bystander Ally).</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Educational Module Section -->
+    <section id="edukasi" class="py-24 relative bg-gray-900/30 border-y border-gray-800/60">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="px-4 py-1.5 bg-purple-950/60 border border-purple-500/30 rounded-full text-purple-400 text-xs font-semibold tracking-wider uppercase">Modul Edukasi Siber</span>
+                <h2 class="text-3xl sm:text-5xl font-extrabold tracking-tight mt-4 mb-6">Pahami Bentuk & Dampak Nyata</h2>
+                <p class="text-gray-400 text-base sm:text-lg">Cyberbullying bukan sekadar "candaan online". Kenali berbagai polanya agar kita bisa mengenali dan menghentikannya.</p>
+            </div>
+
+            <!-- Tabs or Cards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Type 1: Harassment -->
+                <div class="bg-gray-900/80 border border-gray-800 hover:border-cyan-500/50 p-6 rounded-3xl transition duration-300 flex flex-col justify-between group">
+                    <div>
+                        <div class="w-12 h-12 bg-cyan-500/10 text-cyan-400 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition">
+                            <i data-lucide="message-square-warning" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-3">Harassment (Pelecehan)</h3>
+                        <p class="text-sm text-gray-400 leading-relaxed mb-6">Mengirimkan pesan berulang berisi ancaman, teror, penghinaan, atau komentar merendahkan di kolom komentar maupun DM.</p>
+                    </div>
+                    <div class="pt-4 border-t border-gray-800/80 flex items-center justify-between text-xs text-cyan-400 font-medium">
+                        <span>Tingkat Bahaya: Tinggi</span>
+                        <i data-lucide="alert-circle" class="w-4 h-4"></i>
+                    </div>
+                </div>
+
+                <!-- Type 2: Doxing -->
+                <div class="bg-gray-900/80 border border-gray-800 hover:border-purple-500/50 p-6 rounded-3xl transition duration-300 flex flex-col justify-between group">
+                    <div>
+                        <div class="w-12 h-12 bg-purple-500/10 text-purple-400 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition">
+                            <i data-lucide="file-lock-2" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-3">Doxing</h3>
+                        <p class="text-sm text-gray-400 leading-relaxed mb-6">Menyebarkan informasi pribadi rahasia seseorang (nomor HP, alamat rumah, KTP, atau dokumen sensitif) tanpa izin untuk mempermalukan.</p>
+                    </div>
+                    <div class="pt-4 border-t border-gray-800/80 flex items-center justify-between text-xs text-purple-400 font-medium">
+                        <span>Tingkat Bahaya: Sangat Tinggi</span>
+                        <i data-lucide="shield-alert" class="w-4 h-4"></i>
+                    </div>
+                </div>
+
+                <!-- Type 3: Exclusion -->
+                <div class="bg-gray-900/80 border border-gray-800 hover:border-pink-500/50 p-6 rounded-3xl transition duration-300 flex flex-col justify-between group">
+                    <div>
+                        <div class="w-12 h-12 bg-pink-500/10 text-pink-400 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition">
+                            <i data-lucide="user-x" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-3">Exclusion (Pengucilan)</h3>
+                        <p class="text-sm text-gray-400 leading-relaxed mb-6">Sengaja mengeluarkan seseorang dari grup chat, komunitas game, atau mengabaikan kehadirannya secara online untuk membuat mereka merasa terisolasi.</p>
+                    </div>
+                    <div class="pt-4 border-t border-gray-800/80 flex items-center justify-between text-xs text-pink-400 font-medium">
+                        <span>Tingkat Bahaya: Menengah</span>
+                        <i data-lucide="users" class="w-4 h-4"></i>
+                    </div>
+                </div>
+
+                <!-- Type 4: Flaming -->
+                <div class="bg-gray-900/80 border border-gray-800 hover:border-blue-500/50 p-6 rounded-3xl transition duration-300 flex flex-col justify-between group">
+                    <div>
+                        <div class="w-12 h-12 bg-blue-500/10 text-blue-400 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition">
+                            <i data-lucide="flame" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-3">Flaming (Pertengkaran)</h3>
+                        <p class="text-sm text-gray-400 leading-relaxed mb-6">Perdebatan sengit online penuh amarah, kata-kata kasar, dan provokasi di ruang publik digital untuk memicu permusuhan massal.</p>
+                    </div>
+                    <div class="pt-4 border-t border-gray-800/80 flex items-center justify-between text-xs text-blue-400 font-medium">
+                        <span>Tingkat Bahaya: Menengah</span>
+                        <i data-lucide="zap" class="w-4 h-4"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Psychological Impact Alert Box -->
+            <div class="mt-12 bg-gradient-to-r from-gray-900 via-gray-900/90 to-purple-950/40 border border-purple-500/30 p-8 rounded-3xl flex flex-col md:flex-row items-center justify-between gap-8">
+                <div class="space-y-3">
+                    <div class="inline-flex items-center space-x-2 text-purple-400 text-sm font-semibold">
+                        <i data-lucide="brain" class="w-5 h-5"></i>
+                        <span>Dampak Psikologis Jangka Panjang</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white">Jangan Remehkan Luka di Balik Layar Kaca</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed max-w-2xl">
+                        Korban cyberbullying seringkali mengalami penurunan prestasi akademik, hilangnya rasa percaya diri, gangguan tidur (insomnia), hingga trauma psikologis mendalam yang membutuhkan dukungan empati nyata.
+                    </p>
+                </div>
+                <button onclick="showInfoModal('Dukungan Psikologis', 'Jika Anda atau teman Anda mengalami tekanan mental akibat cyberbullying, jangan ragu untuk menghubungi layanan profesional yang tersedia di bagian bawah situs ini.')" class="px-6 py-3.5 bg-purple-600 hover:bg-purple-500 text-white font-semibold rounded-xl text-sm transition shadow-lg shadow-purple-600/20 whitespace-nowrap">
+                    Pelajari Cara Pemulihan
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Simulation & Scenario Game Section -->
+    <section id="simulasi" class="py-24 relative">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <span class="px-4 py-1.5 bg-cyan-950/60 border border-cyan-500/30 rounded-full text-cyan-400 text-xs font-semibold tracking-wider uppercase">Simulasi Interaktif</span>
+                <h2 class="text-3xl sm:text-5xl font-extrabold tracking-tight mt-4 mb-6">Uji Kepedulian & Empati Anda</h2>
+                <p class="text-gray-400 text-base sm:text-lg">Hadapi skenario nyata dalam kehidupan digital sehari-hari. Tentukan pilihanmu dan lihat bagaimana tindakanmu mengubah situasi.</p>
+            </div>
+
+            <!-- Simulation Container -->
+            <div id="sim-container" class="bg-gray-900/80 backdrop-blur-xl border border-gray-800 rounded-3xl p-6 sm:p-10 shadow-2xl relative overflow-hidden">
+                <!-- Progress Bar -->
+                <div class="flex items-center justify-between mb-8">
+                    <span id="sim-step-indicator" class="text-xs font-bold text-cyan-400 uppercase tracking-widest">Skenario 1 dari 3</span>
+                    <div class="w-32 bg-gray-800 h-2 rounded-full overflow-hidden">
+                        <div id="sim-progress-bar" class="bg-cyan-500 h-full w-1/3 transition-all duration-300"></div>
+                    </div>
+                </div>
+
+                <!-- Scenario Content -->
+                <div id="sim-content">
+                    <!-- Loaded dynamically via JS -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Safe Space & Stories / Testimonials Wall Section -->
+    <section id="cerita" class="py-24 relative bg-gray-900/30 border-y border-gray-800/60">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-16">
+                <div class="max-w-2xl">
+                    <span class="px-4 py-1.5 bg-pink-950/60 border border-pink-500/30 rounded-full text-pink-400 text-xs font-semibold tracking-wider uppercase">Ruang Aman & Cerita</span>
+                    <h2 class="text-3xl sm:text-5xl font-extrabold tracking-tight mt-4 mb-4">Pulih Bersama, Saling Menguatkan</h2>
+                    <p class="text-gray-400 text-base">Baca kisah penyintas atau bagikan pesan positif anonim untuk menyemangati mereka yang sedang berjuang.</p>
+                </div>
+                <button onclick="openStoryModal()" class="mt-6 md:mt-0 px-6 py-3.5 bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-400 hover:to-purple-500 text-white font-semibold rounded-xl text-sm shadow-lg shadow-pink-500/20 transition flex items-center space-x-2 whitespace-nowrap">
+                    <i data-lucide="plus-circle" class="w-5 h-5"></i>
+                    <span>Kirim Pesan/Cerita Positif</span>
+                </button>
+            </div>
+
+            <!-- Stories Grid -->
+            <div id="stories-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Card 1 -->
+                <div class="bg-gray-900/90 border border-gray-800 p-8 rounded-3xl relative flex flex-col justify-between group hover:border-pink-500/40 transition">
+                    <div>
+                        <div class="flex items-center space-x-3 mb-6">
+                            <div class="w-10 h-10 rounded-full bg-pink-500/10 text-pink-400 flex items-center justify-center font-bold text-sm">P</div>
+                            <div>
+                                <h4 class="font-bold text-white text-sm">Penyintas Jakarta</h4>
+                                <span class="text-xs text-gray-500">2 hari yang lalu</span>
+                            </div>
+                        </div>
+                        <p class="text-gray-300 text-sm leading-relaxed mb-6">"Dulu saya sempat drop gara-gara diserang komentar negatif massal di TikTok. Tapi setelah berani cerita ke guru BK dan mematikan sosmed seminggu, saya sadar hidup saya jauh lebih berharga dari ketikan mereka."</p>
+                    </div>
+                    <div class="flex items-center justify-between pt-4 border-t border-gray-800/80 text-xs text-gray-400">
+                        <span class="flex items-center space-x-1.5 text-pink-400">
+                            <i data-lucide="heart" class="w-4 h-4 fill-current"></i>
+                            <span id="like-count-1">142</span> Dukungan
+                        </span>
+                        <button onclick="likeStory(1)" class="hover:text-pink-400 transition">Dukung ❤️</button>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="bg-gray-900/90 border border-gray-800 p-8 rounded-3xl relative flex flex-col justify-between group hover:border-cyan-500/40 transition">
+                    <div>
+                        <div class="flex items-center space-x-3 mb-6">
+                            <div class="w-10 h-10 rounded-full bg-cyan-500/10 text-cyan-400 flex items-center justify-center font-bold text-sm">A</div>
+                            <div>
+                                <h4 class="font-bold text-white text-sm">Ally Sahabat Baik</h4>
+                                <span class="text-xs text-gray-500">5 hari yang lalu</span>
+                            </div>
+                        </div>
+                        <p class="text-gray-300 text-sm leading-relaxed mb-6">"Buat teman-teman di luar sana, kalau kalian lihat ada yang dibully di grup kelas, jangan cuma diam atau ikut tertawa. Bela mereka atau laporkan. Satu kata pembelaan kalian sangat berarti bagi mental mereka."</p>
+                    </div>
+                    <div class="flex items-center justify-between pt-4 border-t border-gray-800/80 text-xs text-gray-400">
+                        <span class="flex items-center space-x-1.5 text-cyan-400">
+                            <i data-lucide="heart" class="w-4 h-4 fill-current"></i>
+                            <span id="like-count-2">230</span> Dukungan
+                        </span>
+                        <button onclick="likeStory(2)" class="hover:text-cyan-400 transition">Dukung ❤️</button>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="bg-gray-900/90 border border-gray-800 p-8 rounded-3xl relative flex flex-col justify-between group hover:border-purple-500/40 transition">
+                    <div>
+                        <div class="flex items-center space-x-3 mb-6">
+                            <div class="w-10 h-10 rounded-full bg-purple-500/10 text-purple-400 flex items-center justify-center font-bold text-sm">R</div>
+                            <div>
+                                <h4 class="font-bold text-white text-sm">Remaja Bandung</h4>
+                                <span class="text-xs text-gray-500">1 minggu yang lalu</span>
+                            </div>
+                        </div>
+                        <p class="text-gray-300 text-sm leading-relaxed mb-6">"Jangan biarkan jari orang lain mendefinisikan siapa diri kita. Blokir akun toxic, simpan buktinya, dan kelilingi diri dengan orang-orang yang tulus mendukungmu. Kamu tidak sendirian!"</p>
+                    </div>
+                    <div class="flex items-center justify-between pt-4 border-t border-gray-800/80 text-xs text-gray-400">
+                        <span class="flex items-center space-x-1.5 text-purple-400">
+                            <i data-lucide="heart" class="w-4 h-4 fill-current"></i>
+                            <span id="like-count-3">189</span> Dukungan
+                        </span>
+                        <button onclick="likeStory(3)" class="hover:text-purple-400 transition">Dukung ❤️</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quiz / Assessment Section -->
+    <section id="kuis" class="py-24 relative">
+        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <span class="px-4 py-1.5 bg-cyan-950/60 border border-cyan-500/30 rounded-full text-cyan-400 text-xs font-semibold tracking-wider uppercase">Self Assessment</span>
+                <h2 class="text-3xl sm:text-5xl font-extrabold tracking-tight mt-4 mb-4">Apakah Anda Bystander atau Ally?</h2>
+                <p class="text-gray-400 text-base">Ikuti kuis cepat berdurasi 1 menit untuk mengetahui sejauh mana peran positif Anda di media sosial.</p>
+            </div>
+
+            <div class="bg-gray-900/80 backdrop-blur-xl border border-gray-800 rounded-3xl p-6 sm:p-10 shadow-2xl">
+                <div id="quiz-container">
+                    <!-- Loaded dynamically via JS -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Resources & Reporting Hub Section -->
+    <section id="bantuan" class="py-24 relative bg-gray-900/30 border-t border-gray-800/60">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="px-4 py-1.5 bg-cyan-950/60 border border-cyan-500/30 rounded-full text-cyan-400 text-xs font-semibold tracking-wider uppercase">Pusat Bantuan & Panduan</span>
+                <h2 class="text-3xl sm:text-5xl font-extrabold tracking-tight mt-4 mb-6">Langkah Cepat Melapor & Lindungi Diri</h2>
+                <p class="text-gray-400 text-base sm:text-lg">Panduan praktis tindakan darurat saat menghadapi serangan siber serta daftar kontak lembaga bantuan profesional.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
+                <!-- Action 1: Block & Report -->
+                <div class="bg-gray-900/90 border border-gray-800 p-8 rounded-3xl space-y-4">
+                    <div class="w-12 h-12 bg-cyan-500/10 text-cyan-400 rounded-2xl flex items-center justify-center">
+                        <i data-lucide="shield-off" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white">1. Blokir & Laporkan</h3>
+                    <p class="text-sm text-gray-400 leading-relaxed">Jangan beri ruang bagi pelaku. Segera gunakan fitur block/mute pada akun tersebut dan laporkan (report) konten pelanggaran ke pihak platform.</p>
+                </div>
+
+                <!-- Action 2: Save Evidence -->
+                <div class="bg-gray-900/90 border border-gray-800 p-8 rounded-3xl space-y-4">
+                    <div class="w-12 h-12 bg-purple-500/10 text-purple-400 rounded-2xl flex items-center justify-center">
+                        <i data-lucide="camera" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white">2. Simpan Bukti (Screenshots)</h3>
+                    <p class="text-sm text-gray-400 leading-relaxed">Ambil tangkapan layar (screenshot) pesan, komentar, atau profil pelaku beserta URL tautan sebagai bukti otentik jika diperlukan penegakan hukum.</p>
+                </div>
+
+                <!-- Action 3: Professional Support -->
+                <div class="bg-gray-900/90 border border-gray-800 p-8 rounded-3xl space-y-4">
+                    <div class="w-12 h-12 bg-pink-500/10 text-pink-400 rounded-2xl flex items-center justify-center">
+                        <i data-lucide="heart-handshake" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white">3. Bicara pada Orang Terpercaya</h3>
+                    <p class="text-sm text-gray-400 leading-relaxed">Jangan menanggung beban sendirian. Ceritakan kepada orang tua, guru BK, psikolog, atau sahabat yang dapat diandalkan untuk membimbingmu.</p>
+                </div>
+            </div>
+
+            <!-- Helplines Grid (Indonesia & Global) -->
+            <div class="bg-gray-900/90 border border-gray-800 rounded-3xl p-8 sm:p-10">
+                <h3 class="text-2xl font-bold text-white mb-6 flex items-center space-x-3">
+                    <i data-lucide="phone-call" class="w-6 h-6 text-cyan-400"></i>
+                    <span>Hotline & Lembaga Layanan Pengaduan Resmi</span>
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="bg-gray-950/60 border border-gray-800/80 p-6 rounded-2xl">
+                        <h4 class="font-bold text-white mb-1">KemenPPPA (SAPA 129)</h4>
+                        <p class="text-xs text-cyan-400 mb-3">Layanan Pengaduan Kekerasan Anak & Perempuan</p>
+                        <p class="text-sm text-gray-300 font-mono font-semibold">Hotline: 129 / WhatsApp: 0811-129-129</p>
+                    </div>
+                    <div class="bg-gray-950/60 border border-gray-800/80 p-6 rounded-2xl">
+                        <h4 class="font-bold text-white mb-1">KPAI (Komisi Perlindungan Anak)</h4>
+                        <p class="text-xs text-purple-400 mb-3">Pengaduan Hak & Perlindungan Anak</p>
+                        <p class="text-sm text-gray-300 font-mono font-semibold">Telp: (021) 31901556</p>
+                    </div>
+                    <div class="bg-gray-950/60 border border-gray-800/80 p-6 rounded-2xl">
+                        <h4 class="font-bold text-white mb-1">Layanan Psikologi HIMPSI</h4>
+                        <p class="text-xs text-pink-400 mb-3">Bantuan Konseling Kesehatan Mental</p>
+                        <p class="text-sm text-gray-300 font-mono font-semibold">Website: himpsi.or.id</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-950 border-t border-gray-800 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="flex items-center space-x-3">
+                <div class="p-2 bg-gradient-to-br from-cyan-500 to-purple-600 rounded-xl">
+                    <i data-lucide="shield-check" class="w-5 h-5 text-black"></i>
+                </div>
+                <span class="text-lg font-black tracking-wider text-white">CYBERGUARDIAN</span>
+            </div>
+            <p class="text-xs text-gray-500 text-center">
+                &copy; 2026 CyberGuardian. Bersama wujudkan ruang siber yang aman, sehat, dan berempati untuk seluruh masyarakat Indonesia.
+            </p>
+            <div class="flex items-center space-x-4 text-gray-400">
+                <a href="#beranda" class="hover:text-cyan-400 transition text-xs">Beranda</a>
+                <a href="#edukasi" class="hover:text-cyan-400 transition text-xs">Edukasi</a>
+                <a href="#bantuan" class="hover:text-cyan-400 transition text-xs">Bantuan</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Story Submission Modal -->
+    <div id="story-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm hidden">
+        <div class="bg-gray-900 border border-pink-500/50 rounded-3xl p-8 max-w-lg w-full mx-4 shadow-2xl glow-pink">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-bold text-white flex items-center space-x-2">
+                    <i data-lucide="message-square-plus" class="w-6 h-6 text-pink-400"></i>
+                    <span>Kirim Pesan Positif / Cerita</span>
+                </h3>
+                <button onclick="closeStoryModal()" class="text-gray-400 hover:text-white"><i data-lucide="x" class="w-6 h-6"></i></button>
+            </div>
+            <form onsubmit="handleStorySubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-400 uppercase mb-2">Nama / Alias Anda</label>
+                    <input type="text" id="story-name" required placeholder="Contoh: Sahabat Bijak / Anonim" class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-pink-500 transition">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-400 uppercase mb-2">Pesan Dukungan / Cerita Pemulihan</label>
+                    <textarea id="story-text" required rows="4" placeholder="Tuliskan pesan penyemangat atau pengalaman positifmu..." class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-pink-500 transition resize-none"></textarea>
+                </div>
+                <div class="flex justify-end space-x-3 pt-2">
+                    <button type="button" onclick="closeStoryModal()" class="px-5 py-2.5 bg-gray-800 hover:bg-gray-700 text-gray-300 font-semibold rounded-xl text-sm transition">Batal</button>
+                    <button type="submit" class="px-6 py-2.5 bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-400 hover:to-purple-500 text-white font-semibold rounded-xl text-sm transition shadow-lg shadow-pink-500/20">Kirim Sekarang</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Custom Modal Functions
+        function showInfoModal(title, message) {
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-message').innerText = message;
+            const modal = document.getElementById('custom-modal');
+            const content = document.getElementById('modal-content');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                content.classList.remove('scale-95', 'opacity-0');
+                content.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('custom-modal');
+            const content = document.getElementById('modal-content');
+            content.classList.remove('scale-100', 'opacity-100');
+            content.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 200);
+        }
+
+        // Mobile Menu Toggle
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Audio Ambient Simulation (Tone.js / Web Audio API synth hum)
+        let audioActive = false;
+        let audioCtx = null;
+        let oscillator = null;
+        let gainNode = null;
+
+        function toggleAudio() {
+            audioActive = !audioActive;
+            const btn = document.getElementById('audio-icon');
+            const audioBtn = document.getElementById('audio-btn');
+            
+            if (audioActive) {
+                btn.setAttribute('data-lucide', 'volume-2');
+                audioBtn.classList.add('border-cyan-500', 'text-cyan-400');
+                try {
+                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                    oscillator = audioCtx.createOscillator();
+                    gainNode = audioCtx.createGain();
+                    oscillator.type = 'sine';
+                    oscillator.frequency.setValueAtTime(110, audioCtx.currentTime); // Low calm drone A2
+                    gainNode.gain.setValueAtTime(0.03, audioCtx.currentTime);
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioCtx.destination);
+                    oscillator.start();
+                } catch(e) {
+                    console.log('Audio context not supported');
+                }
+                showInfoModal('Suara Sekitar Aktif', 'Suara latar belakang tenang (ambient drone) diaktifkan untuk membantu fokus.');
+            } else {
+                btn.setAttribute('data-lucide', 'volume-x');
+                audioBtn.classList.remove('border-cyan-500', 'text-cyan-400');
+                if (oscillator) {
+                    oscillator.stop();
+                    oscillator.disconnect();
+                }
+                if (audioCtx) {
+                    audioCtx.close();
+                }
+                showInfoModal('Suara Sekitar Dimatikan', 'Suara latar belakang telah dinonaktifkan.');
+            }
+            lucide.createIcons();
+        }
+
+        // Interactive Simulation Game State
+        const simulationSteps = [
+            {
+                title: "Skenario 1: Postingan Teman di Grup",
+                description: "Seorang teman sekelas mengunggah foto candid seorang murid baru dengan caption yang bernada mengejek penampilannya di grup chat angkatan. Beberapa teman mulai ikut menertawakan.",
+                options: [
+                    { text: "Ikut mengirim emoji tertawa agar tidak dikucilkan", outcome: "bad", feedback: "Pilihan kurang tepat. Ikut menertawakan berarti memperkuat tindakan perundungan dan membuat korban semakin tertekan." },
+                    { text: "Mengabaikan pesan tersebut dan pura-pura tidak melihat", outcome: "neutral", feedback: "Diam saja (bystander pasif) memang aman untuk diri sendiri, namun perundungan akan terus berlanjut tanpa ada teguran." },
+                    { text: "Menegur secara sopan di grup: 'Guys, kasihan yuk jangan gitu' atau laporkan ke admin", outcome: "good", feedback: "Luar biasa! Tindakanmu sebagai bystander ally sangat efektif menghentikan ejekan massal." }
+                ]
+            },
+            {
+                title: "Skenario 2: Komentar Toxic di Kolom Komentar",
+                description: "Kamu melihat akun anonim menyerang video karya seni milik temanmu dengan komentar bernada hinaan kasar dan menyuruhnya berhenti berkarya.",
+                options: [
+                    { text: "Membalas komentar tersebut dengan cacian balasan yang lebih pedas", outcome: "bad", feedback: "Membalas dengan amarah justru memicu 'flaming' berkepanjangan dan memperkeruh suasana digital." },
+                    { text: "Memberikan komentar dukungan positif pada karya temanmu dan melaporkan akun toxic", outcome: "good", feedback: "Sempurna! Dukungan positif menaikkan mental korban, dan melaporkan akun mengamankan ruang digital." },
+                    { text: "Membagikan screenshot komentar itu ke grup lain untuk digosipkan", outcome: "bad", feedback: "Ini memperluas penyebaran ejekan dan mempermalukan korban lebih jauh lagi." }
+                ]
+            },
+            {
+                title: "Skenario 3: Ajakan Mengucilkan Online",
+                description: "Beberapa teman mengajakmu membuat grup chat baru tanpa memasukkan seorang teman karena dianggap 'membosankan' dan mereka berencana mengerjainya secara online.",
+                options: [
+                    { text: "Menolak ajakan tersebut dan mengingatkan mereka bahwa itu menyakiti perasaan", outcome: "good", feedback: "Hebat! Kamu menunjukkan integritas tinggi dan menolak menjadi bagian dari tindakan pengucilan (exclusion)." },
+                    { text: "Ikut masuk grup baru tapi tidak ikut berkomentar apa-apa", outcome: "neutral", feedback: "Walau tidak aktif berkomentar, berada di dalam grup pengucilan tetap memberikan dukungan tak langsung pada pelaku." },
+                    { text: "Ikut merancang ejekan bersama mereka", outcome: "bad", feedback: "Ini adalah bentuk keterlibatan aktif dalam cyberbullying yang berdampak buruk bagi mental korban." }
+                ]
+            }
+        ];
+
+        let currentSimStep = 0;
+        let simScore = 0;
+
+        function renderSimulation() {
+            const content = document.getElementById('sim-content');
+            const stepIndicator = document.getElementById('sim-step-indicator');
+            const progressBar = document.getElementById('sim-progress-bar');
+            
+            stepIndicator.innerText = `Skenario ${currentSimStep + 1} dari ${simulationSteps.length}`;
+            progressBar.style.width = `${((currentSimStep + 1) / simulationSteps.length) * 100}%`;
+
+            const current = simulationSteps[currentSimStep];
+            
+            let html = `
+                <div class="mb-6">
+                    <h3 class="text-xl sm:text-2xl font-bold text-white mb-3">${current.title}</h3>
+                    <p class="text-gray-300 text-sm sm:text-base leading-relaxed">${current.description}</p>
+                </div>
+                <div class="space-y-3">
+            `;
+
+            current.options.forEach((opt, idx) => {
+                html += `
+                    <button onclick="handleSimChoice('${opt.outcome}', \`${opt.feedback.replace(/'/g, "\\'")}\`)" class="w-full text-left p-4 sm:p-5 bg-gray-950/80 border border-gray-800 hover:border-cyan-500 rounded-2xl text-sm text-gray-200 hover:text-white transition duration-200 flex items-center justify-between group">
+                        <span class="pr-4"><strong class="text-cyan-400 mr-2">${String.fromCharCode(65 + idx)}.</strong> ${opt.text}</span>
+                        <i data-lucide="chevron-right" class="w-5 h-5 text-gray-600 group-hover:text-cyan-400 group-hover:translate-x-1 transition flex-shrink-0"></i>
+                    </button>
+                `;
+            });
+
+            html += `</div>`;
+            content.innerHTML = html;
+            lucide.createIcons();
+        }
+
+        function handleSimChoice(outcome, feedback) {
+            if (outcome === 'good') simScore += 30;
+            if (outcome === 'neutral') simScore += 15;
+
+            const content = document.getElementById('sim-content');
+            let badgeColor = outcome === 'good' ? 'text-cyan-400 border-cyan-500/30 bg-cyan-950/40' : (outcome === 'neutral' ? 'text-purple-400 border-purple-500/30 bg-purple-950/40' : 'text-pink-400 border-pink-500/30 bg-pink-950/40');
+            let badgeText = outcome === 'good' ? 'Pilihan Sangat Bijak (Bystander Ally)' : (outcome === 'neutral' ? 'Pilihan Netral' : 'Pilihan Berisiko Buruk');
+
+            content.innerHTML = `
+                <div class="text-center py-8 space-y-6">
+                    <div class="inline-flex items-center space-x-2 px-4 py-2 border rounded-full text-xs font-semibold ${badgeColor}">
+                        <i data-lucide="${outcome === 'good' ? 'check-circle-2' : 'alert-triangle'}" class="w-4 h-4"></i>
+                        <span>${badgeText}</span>
+                    </div>
+                    <p class="text-gray-200 text-base sm:text-lg max-w-xl mx-auto leading-relaxed">${feedback}</p>
+                    <button onclick="nextSimulationStep()" class="px-8 py-3.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-black font-bold rounded-xl text-sm transition shadow-lg shadow-cyan-500/20">
+                        ${currentSimStep < simulationSteps.length - 1 ? 'Lanjutkan ke Skenario Berikutnya' : 'Lihat Hasil Simulasi'}
+                    </button>
+                </div>
+            `;
+            lucide.createIcons();
+        }
+
+        function nextSimulationStep() {
+            currentSimStep++;
+            if (currentSimStep < simulationSteps.length) {
+                renderSimulation();
+            } else {
+                // Show final result
+                const content = document.getElementById('sim-content');
+                document.getElementById('sim-step-indicator').innerText = "Selesai";
+                document.getElementById('sim-progress-bar').style.width = "100%";
+
+                let resultTitle = "CyberGuardian Ally Sejati!";
+                let resultDesc = "Kamu memiliki empati tinggi dan insting yang tepat untuk membela korban serta menciptakan lingkungan digital yang positif.";
+                if (simScore < 50) {
+                    resultTitle = "Perlu Tingkatkan Kesadaran Digital";
+                    resultDesc = "Mari lebih peka terhadap dampak kata-kata di internet. Setiap tindakan kecil kita sangat berarti bagi kesehatan mental sesama.";
+                }
+
+                content.innerHTML = `
+                    <div class="text-center py-6 space-y-6">
+                        <div class="w-16 h-16 bg-gradient-to-br from-cyan-500 to-purple-600 rounded-3xl mx-auto flex items-center justify-center text-black font-black text-2xl shadow-xl shadow-cyan-500/20">
+                            ${simScore}
+                        </div>
+                        <h3 class="text-2xl font-bold text-white">${resultTitle}</h3>
+                        <p class="text-gray-300 text-sm sm:text-base max-w-md mx-auto leading-relaxed">${resultDesc}</p>
+                        <button onclick="resetSimulation()" class="px-8 py-3.5 bg-gray-800 hover:bg-gray-700 text-white font-semibold rounded-xl text-sm transition">
+                            Ulangi Simulasi
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        function resetSimulation() {
+            currentSimStep = 0;
+            simScore = 0;
+            renderSimulation();
+        }
+
+        // Quiz / Assessment State
+        const quizQuestions = [
+            {
+                question: "1. Bagaimana reaksi Anda ketika melihat teman di media sosial dikritik berlebihan dan dihina secara massal?",
+                options: [
+                    "Ikut meninggalkan komentar negatif agar ikut tren.",
+                    "Mengabaikan dan scroll lewat begitu saja.",
+                    "Memberikan komentar positif pembelaan dan melaporkan akun provokator."
+                ]
+            },
+            {
+                question: "2. Apa yang Anda lakukan sebelum mengunggah komentar atau pendapat di internet?",
+                options: [
+                    "Langsung ketik spontan tanpa memikirkan perasaan pembaca.",
+                    "Memastikan apakah kata-kata tersebut pantas dan tidak menyakiti orang lain.",
+                    "Mengirimkan sindiran halus (pansos/psywar)."
+                ]
+            }
+        ];
+
+        let currentQuizQ = 0;
+        let quizAnswersCount = { ally: 0, bystander: 0 };
+
+        function renderQuiz() {
+            const container = document.getElementById('quiz-container');
+            if (currentQuizQ < quizQuestions.length) {
+                const q = quizQuestions[currentQuizQ];
+                let html = `
+                    <div class="mb-6">
+                        <span class="text-xs font-bold text-cyan-400 uppercase tracking-widest">Pertanyaan ${currentQuizQ + 1} dari ${quizQuestions.length}</span>
+                        <h3 class="text-xl font-bold text-white mt-2 mb-6">${q.question}</h3>
+                        <div class="space-y-3">
+                `;
+                q.options.forEach((opt, idx) => {
+                    html += `
+                        <button onclick="handleQuizAnswer(${idx})" class="w-full text-left p-4 sm:p-5 bg-gray-950/80 border border-gray-800 hover:border-cyan-500 rounded-2xl text-sm text-gray-200 hover:text-white transition duration-200 flex items-center justify-between group">
+                            <span class="pr-4"><strong class="text-cyan-400 mr-2">${String.fromCharCode(65 + idx)}.</strong> ${opt}</span>
+                            <i data-lucide="chevron-right" class="w-5 h-5 text-gray-600 group-hover:text-cyan-400 group-hover:translate-x-1 transition flex-shrink-0"></i>
+                        </button>
+                    `;
+                });
+                html += `</div></div>`;
+                container.innerHTML = html;
+                lucide.createIcons();
+            } else {
+                container.innerHTML = `
+                    <div class="text-center py-6 space-y-6">
+                        <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-3xl mx-auto flex items-center justify-center text-white font-black text-xl shadow-xl shadow-purple-500/20">
+                            <i data-lucide="award" class="w-8 h-8"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white">Hasil Kuis: Cyber Ally Berdedikasi</h3>
+                        <p class="text-gray-300 text-sm sm:text-base max-w-md mx-auto leading-relaxed">
+                            Respon Anda menunjukkan komitmen yang kuat untuk menjaga etika digital dan melindungi sesama pengguna dari bahaya cyberbullying. Terus sebarkan kebaikan!
+                        </p>
+                        <button onclick="resetQuiz()" class="px-8 py-3.5 bg-gray-800 hover:bg-gray-700 text-white font-semibold rounded-xl text-sm transition">
+                            Ulangi Kuis
+                        </button>
+                    </div>
+                `;
+                lucide.createIcons();
+            }
+        }
+
+        function handleQuizAnswer(idx) {
+            currentQuizQ++;
+            renderQuiz();
+        }
+
+        function resetQuiz() {
+            currentQuizQ = 0;
+            quizAnswersCount = { ally: 0, bystander: 0 };
+            renderQuiz();
+        }
+
+        // Like Story Function
+        function likeStory(id) {
+            const countEl = document.getElementById(`like-count-${id}`);
+            let current = parseInt(countEl.innerText);
+            countEl.innerText = current + 1;
+            showInfoModal('Dukungan Terkirim', 'Terima kasih telah memberikan apresiasi dan dukungan moral pada cerita ini!');
+        }
+
+        // Story Modal Functions
+        function openStoryModal() {
+            document.getElementById('story-modal').classList.remove('hidden');
+        }
+        function closeStoryModal() {
+            document.getElementById('story-modal').classList.add('hidden');
+        }
+
+        function handleStorySubmit(e) {
+            e.preventDefault();
+            const name = document.getElementById('story-name').value;
+            const text = document.getElementById('story-text').value;
+
+            const grid = document.getElementById('stories-grid');
+            const newCard = document.createElement('div');
+            newCard.className = "bg-gray-900/90 border border-gray-800 p-8 rounded-3xl relative flex flex-col justify-between group hover:border-pink-500/40 transition";
+            newCard.innerHTML = `
+                <div>
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="w-10 h-10 rounded-full bg-pink-500/10 text-pink-400 flex items-center justify-center font-bold text-sm">${name.charAt(0).toUpperCase()}</div>
+                        <div>
+                            <h4 class="font-bold text-white text-sm">${escapeHTML(name)}</h4>
+                            <span class="text-xs text-gray-500">Baru saja</span>
+                        </div>
+                    </div>
+                    <p class="text-gray-300 text-sm leading-relaxed mb-6">"${escapeHTML(text)}"</p>
+                </div>
+                <div class="flex items-center justify-between pt-4 border-t border-gray-800/80 text-xs text-gray-400">
+                    <span class="flex items-center space-x-1.5 text-pink-400">
+                        <i data-lucide="heart" class="w-4 h-4 fill-current"></i>
+                        <span>1</span> Dukungan
+                    </span>
+                    <span class="text-cyan-400 font-medium">Pesan Baru</span>
+                </div>
+            `;
+            grid.insertBefore(newCard, grid.firstChild);
+            lucide.createIcons();
+            closeStoryModal();
+            document.getElementById('story-name').value = '';
+            document.getElementById('story-text').value = '';
+            showInfoModal('Berhasil Dikirim', 'Pesan positif Anda telah berhasil ditambahkan ke Ruang Aman & Cerita.');
+        }
+
+        function escapeHTML(str) {
+            return str.replace(/[&<>'"]/g, 
+                tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+            );
+        }
+
+        // Initialize simulation and quiz on load
+        window.onload = function() {
+            renderSimulation();
+            renderQuiz();
+        };
+    </script>
+</body>
+</html>
